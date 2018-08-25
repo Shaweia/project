@@ -5,8 +5,11 @@
 #include <stdarg.h>
 #include <string.h>
 #include <errno.h>
+#include <assert.h>
 
 #include <iostream>
+#include <map>
+#include <string>
 using namespace std;
 
 #include <sys/types.h> 
@@ -15,6 +18,8 @@ using namespace std;
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <netdb.h>
+#include <signal.h>
 
 #define __TRACE__
 #define __DEBUG__
@@ -36,7 +41,7 @@ inline static void __TraceDebug(const char* filename,int line, const char* funct
 	{
 #ifdef __TRACE__
 		//输出调用函数的信息
-		fprintf(stdout,"[TRACE][%s:%d:%s]:",GetFileName(filename).c_str(), line, function);
+		fprintf(stdout,"[TRACE][%s:%d] %s",GetFileName(filename).c_str(), line, function);
 		//输出用户打的trace信息
 		va_list args;
 		va_start(args,format);
@@ -51,7 +56,7 @@ inline static void __ErrorDebug(const char* filename,int line, const char* funct
 {
 #ifdef __DEBUG__
 	//输出调用函数的信息
-	fprintf(stdout,"[ERROR][%s:%d:%s]:",GetFileName(filename).c_str(), line, function);
+	fprintf(stdout,"[ERROR][%s:%d] %s",GetFileName(filename).c_str(), line, function);
 
 	//输出用户打的trace信息
 	va_list args;
