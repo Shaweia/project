@@ -163,7 +163,8 @@ void EpollServer::SendInLoop(int fd,const char* buf,int len)
     }
 }
 
-void EpollServer::Forwarding(Channel* clientChannel,Channel* serverChannel)
+void EpollServer::Forwarding(Channel* clientChannel,Channel* serverChannel, \
+                            bool sendencry,bool recvdecrypt)
 {
     char buf[4096];
     int rlen = recv(clientChannel->_fd,buf,4096,0);
@@ -179,6 +180,14 @@ void EpollServer::Forwarding(Channel* clientChannel,Channel* serverChannel)
     }
     else
     {
+        if(recvdecrypt)
+        {
+            Decrypt(buf,rlen);
+        }
+        if(sendencry)
+        {
+            Encry(buf,rlen);
+        }
         buf[rlen] = '\0';
         SendInLoop(serverChannel->_fd,buf,rlen);
     }

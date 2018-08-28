@@ -42,7 +42,7 @@ int Sock5Server::AuthHandle(int fd)
     }
     else{
     int n = recv(fd,buf,len,0);
-
+    Decrypt(buf,len);
     if(buf[0] != 0x05)
     {
         ErrorLog("not socks5");
@@ -84,25 +84,28 @@ int Sock5Server::EstablishmentHandle(int fd)
         char port[2];
         //ipv4  直接给出IP地址的
         recv(fd,buf,4,0);
+        Decrypt(buf,4);
 
         if(buf[3] == 0x01) 
         {
             recv(fd,ip,4,0);
+            Decrypt(ip,4);
             recv(fd,port,2,0);
-
+            Decrypt(port,2);
             TraceLog("ipv4:%s,%s",ip,port);
         }
         else if(buf[3] == 0x03)  //domain Name
         {
             char len = 0;
             recv(fd,&len,1,0);
-
+            Decrypt(&len,1);
             recv(fd,buf,len,0);
+            Decrypt(buf,len);
             buf[len] = '\0';
             TraceLog("domianname:%s ",buf);
 
             recv(fd,port,2,0);
-
+            Decrypt(port,2);
             //通过域名取‘IP’
             struct hostent* hptr = gethostbyname(buf);
             if(hptr == NULL)
@@ -170,7 +173,7 @@ void Sock5Server::ReadEventHandle(int connectfd)
                 reply[1] = 0xFF;
                 RemoveConnect(connectfd);
             }
-
+            Encry(reply,2);
             if(send(connectfd,reply,2,0) != 2)
             {
                 ErrorLog("auth reply");
@@ -195,7 +198,7 @@ void Sock5Server::ReadEventHandle(int connectfd)
                 reply[1] = 0x00;
                 reply[3] = 0x01;
             }
-
+            Encry(reply,10);
             if(send(connectfd,reply,10,0) != 10)
             {
                 ErrorLog("Establishment reply");
@@ -214,13 +217,15 @@ void Sock5Server::ReadEventHandle(int connectfd)
         {
             Channel* clientChannel = &con->_clientChannel;
             Channel* serverChannel = &con->_serverChannel;
-
+            
+            bool sendencry = false,recvdecrypt = true;
             if(connectfd == serverChannel->_fd)
             {
                 swap(clientChannel,serverChannel);
+                swap(sendencry,recvdecrypt);
             }
             //client->server
-            Forwarding(clientChannel,serverChannel);
+            Forwarding(clientChannel,serverChannel,sendencry,recvdecrypt);
         }
         else{
             assert(false);

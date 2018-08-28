@@ -9,6 +9,7 @@
 #define _EPOLL_H_
 
 #include"common.h"
+#include"encry.h"
 
 class IgnoreSigPipe
 {
@@ -28,7 +29,7 @@ public:
         ,_eventfd(-1)
     {}
 
-    virtual  ~EpollServer()
+    virtual ~EpollServer()
     {
         if(_listenfd != -1)
             close(_listenfd);
@@ -69,7 +70,8 @@ public:
     void OpEvent(int fd,int events,int op);   //操作时间，添加或者删除
     void SetNonBlocking(int fd);               //设置文件描述符为非阻塞
     void SendInLoop(int fd,const char* buf,int len);
-    void Forwarding(Channel* clientChannel,Channel* serverChannel);
+    void Forwarding(Channel* clientChannel,Channel* serverChannel,\
+                   bool sendencry,bool recvdecrypt);
     void RemoveConnect(int fd);
 
     //多态实现虚函数
