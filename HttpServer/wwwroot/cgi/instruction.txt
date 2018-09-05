@@ -1,0 +1,21 @@
+ls 命令用来显示目标列表，在Linux中是使用率较高的命令。ls命令的输出信息可以进行彩色加亮显示，以分区不同类型的文件。
+cp 命令用来将一个或多个源文件或者目录复制到指定的目的文件或目录。它可以将单个源文件复制成一个指定文件名的具体的文件或一个已经存在的目录下。cp命令还支持同时复制多个文件，当一次复制多个文件时，目标文件参数必须是一个已经存在的目录，否则将出现错误。
+arch 显示架构的 
+uname -m 显示机器的处理器架构(2) 
+uname -r 显示正在使用的内核版本 
+dmidecode -q 显示硬件系统部件 - (SMBIOS / DMI) 
+hdparm -i /dev/hda 罗列一个磁盘的架构特性 
+hdparm -tT /dev/sda 在磁盘上执行测试性读取操作 
+cat /proc/cpuinfo 显示CPU info的信息 
+cat /proc/interrupts 显示中断 
+cat /proc/meminfo 校验内存使用 
+cat /proc/swaps 显示哪些swap被使用 
+cat /proc/version 显示内核的版本 
+cat /proc/net/dev 显示网络适配器及统计 
+cat /proc/mounts 显示已加载的文件系统 
+lspci -tv 罗列 PCI 设备 
+lsusb -tv 显示 USB 设备 
+date 显示系统日期 
+cal 2007 显示2007年的日历表 
+date 041217002007.00 设置日期和时间 - 月日时分年.秒 
+clock -w 将时间修改保存到 BIOS 
